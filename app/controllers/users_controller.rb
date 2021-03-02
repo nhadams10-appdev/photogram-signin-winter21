@@ -1,7 +1,32 @@
 class UsersController < ApplicationController
   def authenticate
+    # get the username from params
+    un = params.fetch("input_username")
+    # get the password from params
+    pw = params.fetch("input_password")
 
-    render({ :plain => "hi"})
+    #look up the record from the db matching username
+    user = User.where({ :username => un }).first
+
+    #if there's no record, redirect back to sign in form
+    if user == nil
+      redirect_to("/user_sign_in", { :alert => "No one by that name 'round these parts"})
+    else
+      #if there is a record, check to see if password matches
+      if user.authenticate(pw)
+        #if so, set the cookie
+        session.store(:user_id, user.id)
+
+        #redirect to homepage
+        redirect_to("/", { :notice => "Welcome back, " + user.username + "!"})
+      
+      else  
+        #if not, redirect back to sign in form
+        redirect_to("/user_sign_in", { :alert => "Nice try, sucker!"})
+
+      end
+    end
+
   end
   
   def toast_cookies
