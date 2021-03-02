@@ -17,12 +17,21 @@
   <body>
     <nav>
       <ul>
-        <li><a href="/user_sign_in">Sign In</a>
-        <li><a href="/user_sign_up">Sign Up</a>
-        <li><a href="/user_sign_out">Sign Out</a>
+        <% if session.fetch(:user_id) != nil%>
+          <li><%= session.fetch(:user_id) %></li>
+        <% end %>
+
+        <% if session.fetch(:user_id) == nil%>
+          <li><a href="/user_sign_in">Sign In</a>
+          <li><a href="/user_sign_up">Sign Up</a>
+        <% end %>
+
         <li><a href="/users">Users</a></li>
         <li><a href="/photos">Photos</a></li>
-        <li><%= session.fetch(:user_id) %></li>
+
+        <% if session.fetch(:user_id) != nil%>
+          <li><a href="/user_sign_out">Sign Out</a>
+        <% end %>
       </ul>
     </nav>
 
